@@ -120,12 +120,53 @@ designed but unverified:
   centred and `GetSystemMetrics` adjustments may still apply under `WS_POPUP`,
   so sizing needs checking.
 
-**Not yet decoded.** The jump tables in `ClientCommunicationSystem::HandleFailureEvent`
-(339 cases) and `UIQueueManager::ProcessNetBlobData` (164 message IDs). Decoding
-them would make the `WeenieError` and S2C-opcode comparison against ACProtocol
-exhaustive; right now only `Command` is exhaustive (via the static
-`string2command` table) and `EmoteType`/`EmoteCategory`/`GameEvent` are bounds
-checks.
+**Decoded (2026-07-28).** The jump tables in
+`ClientCommunicationSystem::HandleFailureEvent` (`0x00571990`) and
+`UIQueueManager::ProcessNetBlobData` (`0x0055B000`) are now fully decoded, so the
+`WeenieError` and S2C-opcode comparisons against ACProtocol are **exhaustive**.
+Results are in `2013-09 11.4186/acclient-src/reference/`:
+`failure_events_11.4186.tsv` (344 rows) and `s2c_dispatch_11.4186.tsv` (168 rows).
+
+Neither function has *one* table — MSVC compiled each sparse switch into a
+binary-search chain of range tables plus discrete `je` cases:
+
+| | ranges | discrete `je` | total cases | default target |
+|---|---|---|---|---|
+| `HandleFailureEvent` | 6 (3 byte-indexed) | 5 | **344** (339 from tables) | `0x0057544A` |
+| `ProcessNetBlobData` | 7 (all byte-indexed) | 6 | **168** (162 from tables) | `0x0055CA5C` |
+
+Correcting two figures this file previously carried: the 339 was the
+table-only count and missed the 5 discrete cases; and `ProcessNetBlobData`
+dispatches **168** message IDs, not 164.
+
+What the comparison shows:
+
+- **Every one of the 344 failure codes and all 168 opcodes maps to a named
+  ACProtocol entry — zero undocumented.**
+- Failure codes: 233 are `WeenieError`, 111 are `WeenieErrorWithString`. The
+  client handles **all 113** `WeenieErrorWithString` values and 233 of 369
+  `WeenieError`; the 136 unhandled are server-internal codes (`NoMem`,
+  `BadParam`, `SegV`, …), 55 of them below `0x100`. Client span is
+  `0x17`–`0x593`; ACProtocol's `0x594 ContractError` sits one past the last
+  table entry.
+- Opcodes: 99 `GameEvent` + 69 `S2CMessage`. **Only one `GameEvent` is never
+  dispatched — `0x1C8 Allegiance_AllegianceUpdateDone`.**
+- `0x46A` and `0x528` appear in *both* error enums under different names
+  (`TradeAiDoesntWant`/`DoesntKnowWhatToDoWithThat`,
+  `FellowshipIsLocked`/`YouCannotOpenLockedFellowship`) — an ACProtocol
+  ambiguity, not a client one.
+
+Corroboration: for the 339 codes carrying both a name and a literal message,
+**94% share a word between the ACProtocol name and the client's own message
+string** (`YouAreTooTiredToDoThat` ↔ "You are too tired to do that!"), which is
+independent agreement between the community reference and the binary. Decoding
+was validated against six handlers documented elsewhere in these reports
+(`0xEA60`→`DispatchUI_Environs`, `0x2EB`, `0x147`, `0x312`, `0x2C7`, `0x13`);
+all six resolve correctly.
+
+Three failure cases (`0x24`, `0x48`, `0x49`) display runtime-initialised
+`.data` string objects rather than literals, and two (`0x4DE`, `0x4DF`) build
+their text from the event payload — so those five have no fixed message.
 
 **Not done.** The 2015 client has no source tree, because without a PDB its
 functions are all `sub_XXXXXX` with no module information to organise by. A

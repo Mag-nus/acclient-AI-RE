@@ -1,0 +1,345 @@
+error_hex	error_dec	WeenieError	WeenieErrorWithString	handler_va	message
+0x17	23	BadMovementEvent		0x00571ABD	You failed to go to non-combat mode.
+0x1D	29	YoureTooBusy		0x00571A62	You're too busy!
+0x1E	30		IsTooBusyToAcceptGifts	0x00572AF9	 is too busy to accept gifts right now.\n
+0x20	32	IllegalInventoryTransaction		0x00571AEF	You must control both objects!
+0x23	35	MotionFailure		0x00571B18	Unable to move to object!
+0x24	36	YouCantJumpWhileInTheAir		0x00571D94	
+0x26	38	ThatIsNotAValidCommand		0x00571C6B	That is not a valid command.
+0x28	40	Frozen		0x00571BB5	The item is under someone else's control!
+0x29	41	Stuck		0x00571BDE	You cannot pick that up!
+0x2A	42	YouAreTooEncumbered		0x00571C10	You are too encumbered to carry that!
+0x2B	43		CannotCarryAnymore	0x00571C94	 cannot carry anymore.\n
+0x36	54	ActionCancelled		0x00571B83	Action cancelled!
+0x37	55	ObjectGone		0x00571B18	Unable to move to object!
+0x38	56	NoObject		0x00571B18	Unable to move to object!
+0x39	57	CantGetThere		0x00571B18	Unable to move to object!
+0x3A	58	Dead		0x00571A94	You can't do that... you're dead!
+0x3D	61	YouChargedTooFar		0x00571B5A	You charged too far!
+0x3E	62	YouAreTooTiredToDoThat		0x00571C39	You are too tired to do that!
+0x48	72	YouCantJumpFromThisPosition		0x00571D66	
+0x49	73	CantJumpLoadedDown		0x00571D7D	
+0x4A	74	YouKilledYourself		0x00571D34	Ack! You killed yourself!\n
+0x4D	77	InvalidPkStatus		0x00571CD8	Invalid PK status!
+0x4E	78		YouFailToAffect_YouCannotAffectAnyone	0x00571D01	You fail to affect %s because you cannot affect anyone!\n
+0x4F	79		YouFailToAffect_TheyCannotBeHarmed	0x00571DAB	You fail to affect %s because $s cannot be harmed!\n
+0x50	80		YouFailToAffect_WithBeneficialSpells	0x00571DE4	You fail to affect %s because beneficial spells do not affect %s!\n
+0x51	81		YouFailToAffect_YouAreNotPK	0x00571DF8	You fail to affect %s because you are not a player killer!\n
+0x52	82		YouFailToAffect_TheyAreNotPK	0x00571E0C	You fail to affect %s because %s is not a player killer!\n
+0x53	83		YouFailToAffect_NotSamePKType	0x00571E42	You fail to affect %s because you are not the same sort of player killer as %s!\n
+0x54	84		YouFailToAffect_AcrossHouseBoundary	0x00571E78	You fail to affect %s because you are acting across a house boundary!\n
+0x3EE	1006	TheContainerIsClosed		0x00571E8C	The container is closed!
+0x3EF	1007		IsNotAcceptingGiftsRightNow	0x00571F88	 is not accepting gifts right now.\n
+0x3F1	1009	ChangeCombatModeFailure		0x00571ED2	You failed to go to non-combat mode.
+0x3F7	1015	YouAreTooFatiguedToAttack		0x00571F04	You are too fatigued to attack!
+0x3F8	1016	YouAreOutOfAmmunition		0x00571F2D	You are out of ammunition!
+0x3F9	1017	YourAttackMisfired		0x00571F5F	Your missile attack misfired!
+0x3FA	1018	YouveAttemptedAnImpossibleSpellPath		0x00572112	You've attempted an impossible spell path!
+0x3FE	1022	YouDontKnowThatSpell		0x00571FCC	You don't know that spell!
+0x3FF	1023	IncorrectTargetType		0x00571FF5	Incorrect target type
+0x400	1024	YouDontHaveAllTheComponents		0x00572027	You don't have all the components for this spell.
+0x401	1025	YouDontHaveEnoughManaToCast		0x00572050	You don't have enough Mana to cast this spell.
+0x402	1026	YourSpellFizzled		0x00572082	Your spell fizzled.\n
+0x403	1027	YourSpellTargetIsMissing		0x005720AE	Your spell's target is missing!
+0x404	1028	YourProjectileSpellMislaunched		0x005720E0	Your projectile spell mislaunched!
+0x407	1031	YourSpellCannotBeCastOutside		0x00572144	Your spell cannot be cast outside
+0x408	1032	YourSpellCannotBeCastInside		0x00572176	Your spell cannot be cast inside
+0x40A	1034	YouAreUnpreparedToCastASpell		0x00572347	You are unprepared to cast a spell
+0x40B	1035	YouveAlreadySwornAllegiance		0x005724A5	You've already sworn your Allegiance
+0x40C	1036	CantSwearAllegianceInsufficientXp		0x00572473	You don't have enough experience available to swear Allegiance
+0x413	1043		IsAlreadyOneOfYourFollowers	0x0057251D	%s is already one of your followers
+0x414	1044	YouAreNotInAllegiance		0x005724D7	You are not in an allegiance!
+0x416	1046		CannotHaveAnyMoreVassals	0x00572509	%s cannot have any more Vassals
+0x41D	1053	YouMustBeLeaderOfFellowship		0x00572531	You must be the leader of a Fellowship
+0x41E	1054	YourFellowshipIsFull		0x00572563	Your Fellowship is full
+0x41F	1055	FellowshipNameIsNotPermitted		0x00572595	That Fellowship name is not permitted
+0x422	1058	ThatChannelDoesntExist		0x005725C7	That channel doesn't exist.
+0x423	1059	YouCantUseThatChannel		0x005725F9	You can't use that channel.
+0x424	1060	YouAreAlreadyOnThatChannel		0x0057262B	You're already on that channel.
+0x425	1061	YouAreNotOnThatChannel		0x0057265D	You're not currently on that channel.
+0x427	1063	YouCannotMergeDifferentStacks		0x005721C5	You cannot merge different stacks!
+0x428	1064	YouCannotMergeEnchantedItems		0x005721F7	You cannot merge enchanted items!
+0x429	1065	YouMustControlAtLeastOneStack		0x00572229	You must control at least one stack!
+0x432	1074	UnableToMakeCraftReq		0x0057268F	Your craft attempt fails.
+0x433	1075	CraftAnimationFailed		0x0057268F	Your craft attempt fails.
+0x434	1076	YouCantCraftWithThatNumberOfItems		0x00572725	Given that number of items, you cannot craft anything.
+0x435	1077	CraftGeneralErrorUiMsg		0x0057268F	Your craft attempt fails.
+0x437	1079	YouDoNotPassCraftingRequirements		0x005726F3	Either you or one of the items involved does not pass the requirements for this craft interaction.
+0x438	1080	YouDoNotHaveAllTheNecessaryItems		0x00572757	You do not have all the neccessary items.
+0x439	1081	NotAllTheItemsAreAvailable		0x005726C1	Not all the items are avaliable.
+0x43A	1082	YouMustBeInPeaceModeToTrade		0x00572789	You must be at rest in peace mode to do trade skills.
+0x43B	1083	YouAreNotTrainedInThatTradeSkill		0x005727BB	You are not trained in that trade skill.
+0x43C	1084	YourHandsMustBeFree		0x005727ED	Your hands must be free.
+0x43D	1085	YouCannotLinkToThatPortal		0x00572441	You cannot link to that portal!\n
+0x43E	1086	YouHaveSolvedThisQuestTooRecently		0x005722B1	You have solved this quest too recently!\n
+0x43F	1087	YouHaveSolvedThisQuestTooManyTimes		0x005722E3	You have solved this quest too many times!\n
+0x445	1093	ItemRequiresQuestToBePickedUp		0x00572315	This item requires you to complete a specific quest before you can pick it up!\n
+0x45C	1116	PKsMayNotUsePortal		0x00572379	Player killers may not interact with that portal!\n
+0x45D	1117	NonPKsMayNotUsePortal		0x005723AB	Non-player killers may not interact with that portal!\n
+0x45E	1118	HouseAbandoned		0x00572851	You do not own a house!
+0x45F	1119	HouseEvicted		0x00572851	You do not own a house!
+0x466	1126	YouMustHaveDarkMajestyToUsePortal		0x005723DD	You must purchase Asheron's Call: Dark Majesty to interact with that portal.\n
+0x469	1129	YouHaveUsedAllTheHooks		0x005728E7	You have used all the hooks you are allowed to use for this house.\n
+0x46A	1130	TradeAiDoesntWant	DoesntKnowWhatToDoWithThat	0x0057225B	 doesn't know what to do with that.\n
+0x474	1140	YouMustCompleteQuestToUsePortal		0x0057240F	You must complete a quest to interact with that portal.\n
+0x47F	1151	YouMustOwnHouseToUseCommand		0x0057281F	You must own a house to use this command.
+0x480	1152	YourMonarchDoesNotOwnAMansionOrVilla		0x00572883	Your monarch does not own a mansion or a villa!
+0x481	1153	YourMonarchsHouseIsNotAMansionOrVilla		0x00572883	Your monarch does not own a mansion or a villa!
+0x482	1154	YourMonarchHasClosedTheMansion		0x005728B5	Your monarch has closed the mansion to the Allegiance.
+0x488	1160		YouMustBeAboveLevel_ToBuyHouse	0x00572919	You must be above level %s to purchase this dwelling.\n
+0x489	1161		YouMustBeAtOrBelowLevel_ToBuyHouse	0x0057292D	You must be at or below level %s to purchase this dwelling.\n
+0x48A	1162	YouMustBeMonarchToPurchaseDwelling		0x00572941	You must be a monarch to purchase this dwelling.\n
+0x48B	1163		YouMustBeAboveAllegianceRank_ToBuyHouse	0x00573611	You must be above allegiance rank %s to purchase this dwelling.\n
+0x48C	1164		YouMustBeAtOrBelowAllegianceRank_ToBuyHouse	0x00573625	You must be at or below allegiance rank %s to purchase this dwelling.\n
+0x48E	1166	YourOfferOfAllegianceWasIgnored		0x00573188	Your offer of Allegiance has been ignored.
+0x48F	1167	ConfirmationInProgress		0x00572989	You are already involved in something!
+0x490	1168	YouMustBeAMonarchToUseCommand		0x00572A1F	You must be a monarch to use this command.
+0x491	1169	YouMustSpecifyCharacterToBoot		0x005731BA	You must specify a character to boot.
+0x492	1170	YouCantBootYourself		0x005731EC	You can't boot yourself!
+0x493	1171	ThatCharacterDoesNotExist		0x00572A51	That character does not exist.
+0x494	1172	ThatPersonIsNotInYourAllegiance		0x005732B4	That person is not a member of your Allegiance!
+0x495	1173	CantBreakFromPatronNotInAllegiance		0x005732E6	No patron from which to break!
+0x496	1174	YourAllegianceHasBeenDissolved		0x00573318	Your Allegiance has been dissolved!\n
+0x497	1175	YourPatronsAllegianceHasBeenBroken		0x0057334A	Your patron's Allegiance to you has been broken!\n
+0x498	1176	YouHaveMovedTooFar		0x005729BB	You have moved too far!
+0x499	1177	TeleToInvalidPosition		0x005729ED	That is not a valid destination!
+0x49A	1178	MustHaveDarkMajestyToUse		0x00572A83	You must purchase Asheron's Call -- Dark Majesty to use this function.
+0x49B	1179	YouFailToLinkWithLifestone		0x0057308E	You fail to link with the lifestone!\n
+0x49C	1180	YouWanderedTooFarToLinkWithLifestone		0x005730C0	You wandered too far to link with the lifestone!\n
+0x49D	1181	YouSuccessfullyLinkWithLifestone		0x005730F2	You successfully link with the lifestone!\n
+0x49E	1182	YouMustLinkToLifestoneToRecall		0x00573124	You must have linked with a lifestone in order to recall to it!\n
+0x49F	1183	YouFailToRecallToLifestone		0x00573156	You fail to recall to the lifestone!\n
+0x4A0	1184	YouFailToLinkWithPortal		0x00572D6E	You fail to link with the portal!\n
+0x4A1	1185	YouSuccessfullyLinkWithPortal		0x00572DA0	You successfully link with the portal!\n
+0x4A2	1186	YouFailToRecallToPortal		0x00572DD2	You fail to recall to the portal!\n
+0x4A3	1187	YouMustLinkToPortalToRecall		0x00572E04	You must have linked with a portal in order to recall to it!\n
+0x4A4	1188	YouFailToSummonPortal		0x00572E36	You fail to summon the portal!\n
+0x4A5	1189	YouMustLinkToPortalToSummonIt		0x00572E68	You must have linked with a portal in order to summon it!\n
+0x4A6	1190	YouFailToTeleport		0x00572E9A	You fail to teleport!\n
+0x4A7	1191	YouHaveBeenTeleportedTooRecently		0x00572ECC	You have been teleported too recently!\n
+0x4A8	1192	YouMustBeAnAdvocateToUsePortal		0x00572EFE	You must be an Advocate to interact with that portal.\n
+0x4AA	1194	PlayersMayNotUsePortal		0x00572F30	Players may not interact with that portal.\n
+0x4AB	1195	YouAreNotPowerfulEnoughToUsePortal		0x00572F94	You are not powerful enough to interact with that portal!\n
+0x4AC	1196	YouAreTooPowerfulToUsePortal		0x00572F62	You are too powerful to interact with that portal!\n
+0x4AD	1197	YouCannotRecallPortal		0x00572FF8	You cannot recall to that portal!\n
+0x4AE	1198	YouCannotSummonPortal		0x0057302A	You cannot summon that portal!\n
+0x4AF	1199	LockAlreadyUnlocked		0x00572B3D	The lock is already unlocked.
+0x4B0	1200	YouCannotLockOrUnlockThat		0x00572B6F	You can't lock or unlock that!
+0x4B1	1201	YouCannotLockWhatIsOpen		0x00572BA1	You can't lock or unlock what is open!
+0x4B2	1202	KeyDoesntFitThisLock		0x00572BD3	The key doesn't fit this lock.\n
+0x4B3	1203	LockUsedTooRecently		0x00572C05	The lock has been used too recently.
+0x4B4	1204	YouArentTrainedInLockpicking		0x00572C37	You aren't trained in lockpicking!
+0x4B5	1205	AllegianceInfoEmptyName		0x0057321E	You must specify a character to query.
+0x4B6	1206	AllegianceInfoSelf		0x00573250	Please use the allegiance panel to view your own information.
+0x4B7	1207	AllegianceInfoTooRecent		0x00573282	You have used that command too recently.
+0x4B8	1208	AbuseNoSuchCharacter		0x005733AE	You do not own that salvage tool!\n
+0x4B9	1209	AbuseReportedSelf		0x005733AE	You do not own that salvage tool!\n
+0x4BA	1210	AbuseComplaintHandled		0x005733AE	You do not own that salvage tool!\n
+0x4BD	1213	YouDoNotOwnThatSalvageTool		0x005733BC	You do not own that salvage tool!\n
+0x4BE	1214	YouDoNotOwnThatItem		0x005733EE	You do not own that item!\n
+0x4BF	1215		The_WasNotSuitableForSalvaging	0x005734A4	item
+0x4C0	1216		The_ContainseTheWrongMaterial	0x00573506	The %s contains the wrong material.
+0x4C1	1217	MaterialCannotBeCreated		0x00573420	The material cannot be created.\n
+0x4C2	1218	ItemsAttemptingToSalvageIsInvalid		0x00573452	The list of items you are attempting to salvage is invalid.\n
+0x4C3	1219	YouCannotSalvageItemsInTrading		0x0057347B	You cannot salvage items that you are trading!\n
+0x4C4	1220	YouMustBeHouseGuestToUsePortal		0x00572FC6	You must be a guest in this house to interact with that portal.\n
+0x4C5	1221	YourAllegianceRankIsTooLowToUseMagic		0x00572C69	Your Allegiance Rank is too low to use that item's magic.
+0x4C6	1222		YouMustBe_ToUseItemMagic	0x00572C9B	You must be %s to use that item's magic.
+0x4C7	1223	YourArcaneLoreIsTooLowToUseMagic		0x00572CAF	Your Arcane Lore skill is too low to use that item's magic.
+0x4C8	1224	ItemDoesntHaveEnoughMana		0x00572CE1	That item doesn't have enough Mana.
+0x4C9	1225		Your_IsTooLowToUseItemMagic	0x00572D13	Your %s is too low to use that item's magic.
+0x4CA	1226		Only_MayUseItemMagic	0x00572D27	Only %s may use that item's magic.
+0x4CB	1227		YouMustSpecialize_ToUseItemMagic	0x00572D5A	You must have %s specialized to use that item's magic.
+0x4CC	1228	YouHaveBeenInPKBattleTooRecently		0x0057305C	You have been involved in a player killer battle too recently to do that!\n
+0x4CE	1230		AiRefuseItemDuringEmote	0x00572AF9	 is too busy to accept gifts right now.\n
+0x4CF	1231		CannotAcceptStackedItems	0x00572AB5	 cannot accept stacked objects. Try giving one at a time.\n
+0x4D0	1232	YouFailToAlterSkill		0x00573639	You have failed to alter your skill.\n
+0x4D1	1233		Your_SkillMustBeTrained	0x00573662	Your %s skill must be trained, not untrained or specialized, in order to be altered in this way!\n
+0x4D2	1234		NotEnoughSkillCreditsToSpecialize	0x00573676	You do not have enough skill credits to specialize your %s skill.\n
+0x4D3	1235		TooMuchXPToRecoverFromSkill	0x0057368A	You have too many available experience points to be able to absorb the experience points from your %s skill. Please spend some of your experience points and try again.\n
+0x4D4	1236		Your_SkillIsAlreadyUntrained	0x0057369E	Your %s skill is already untrained!\n
+0x4D5	1237		CannotLowerSkillWhileWieldingItem	0x005736B2	You are currently wielding items which require a certain level of %s.  Your %s skill cannot be lowered while you are wielding these items.  Please remove these items and try again.\n
+0x4D6	1238		YouHaveSucceededSpecializing_Skill	0x005736FC	You have succeeded in specializing your %s skill!\n
+0x4D7	1239		YouHaveSucceededUnspecializing_Skill	0x00573710	You have succeeded in lowering your %s skill from specialized to trained!\n
+0x4D8	1240		YouHaveSucceededUntraining_Skill	0x00573724	You have succeeded in untraining your %s skill!\n
+0x4D9	1241		CannotUntrain_SkillButRecoveredXP	0x00573738	Although you cannot untrain your %s skill, you have succeeded in recovering all the experience you had invested in it.\n
+0x4DA	1242		TooManyCreditsInSpecializedSkills	0x005736E8	You have too many credits invested in specialized skills already! Before you can specialize your %s skill, you will need to unspecialize some other skill.\n
+0x4DD	1245	YouHaveFailedToAlterAttributes		0x0057374C	You have failed to alter your attributes.\n
+0x4DE	1246		AttributeTransferFromTooLow	0x00573775	
+0x4DF	1247		AttributeTransferToTooHigh	0x00573775	
+0x4E0	1248	CannotTransferAttributesWhileWieldingItem		0x005737D2	You are currently wielding items which require a certain level of skill. Your attributes cannot be transferred while you are wielding these items. Please remove these items and try again.\n
+0x4E1	1249	YouHaveSucceededTransferringAttributes		0x005737FB	You have succeeded in transferring your attributes!\n
+0x4E2	1250	HookIsDuplicated		0x00573544	This hook is a duplicated housing object. You may not add items to a duplicated housing object. Please empty the hook and allow it to reset.\n
+0x4E3	1251	ItemIsWrongTypeForHook		0x00573596	That item is of the wrong type to be placed on this hook.\n
+0x4E4	1252	HousingChestIsDuplicated		0x005735BF	This chest is a duplicated housing object. You may not add items to a duplicated housing object. Please empty everything -- including backpacks -- out of the chest and allow the chest to reset.\n
+0x4E5	1253	HookWillBeDeleted		0x0057356D	This hook was a duplicated housing object. Since it is now empty, it will be deleted momentarily. Once it is gone, it is safe to use the other, non-duplicated hook that is here.\n
+0x4E6	1254	HousingChestWillBeDeleted		0x005735E8	This chest was a duplicated housing object. Since it is now empty, it will be deleted momentarily. Once it is gone, it is safe to use the other, non-duplicated chest that is here.\n
+0x4E7	1255	CannotSwearAllegianceWhileOwningMansion		0x0057337C	You cannot swear allegiance to anyone because you own a monarch-only house. Please abandon your house and try again.\n
+0x4E8	1256		ItemUnusableOnHook_CannotOpen	0x00573824	The %s cannot be used while on a hook and only the owner may open the hook.\n
+0x4E9	1257		ItemUnusableOnHook_CanOpen	0x00574E55	The %s cannot be used while on a hook, use the '@house hooks on' command to make the hook openable.\n
+0x4EA	1258		ItemOnlyUsableOnHook	0x00574ECD	The %s can only be used while on a hook.\n
+0x4EB	1259	YouCantDoThatWhileInTheAir		0x00573850	You can't do that while in the air!
+0x4EC	1260	CannotChangePKStatusWhileRecovering		0x00574463	You cannot modify your player killer status while you are recovering from a PK death.\n
+0x4ED	1261	AdvocatesCannotChangePKStatus		0x00574495	Advocates may not change their player killer status!\n
+0x4EE	1262	LevelTooLowToChangePKStatusWithObject		0x005744C7	Your level is too low to change your player killer status with this object.\n
+0x4EF	1263	LevelTooHighToChangePKStatusWithObject		0x005744F9	Your level is too high to change your player killer status with this object.\n
+0x4F0	1264	YouFeelAHarshDissonance		0x0057452B	You feel a harsh dissonance, and you sense that an act of killing you have committed recently is interfering with the conversion.\n
+0x4F1	1265	YouArePKAgain		0x0057455D	Bael'Zharon's power flows through you again. You are once more a player killer.\n
+0x4F2	1266	YouAreTemporarilyNoLongerPK		0x0057458F	Bael'Zharon has granted you respite after your moment of weakness. You are temporarily no longer a player killer.\n
+0x4F3	1267	PKLiteMayNotUsePortal		0x00573C58	Lite Player Killers may not interact with that portal!\n
+0x4F4	1268		FailsToAffectYou_TheyCannotAffectAnyone	0x00574657	%s fails to affect you because $s cannot affect anyone!\n
+0x4F5	1269		FailsToAffectYou_YouCannotBeHarmed	0x0057466E	%s fails to affect you because you cannot be harmed!\n
+0x4F6	1270		FailsToAffectYou_TheyAreNotPK	0x0057468F	%s fails to affect you because %s is not a player killer!\n
+0x4F7	1271		FailsToAffectYou_YouAreNotPK	0x005746A6	 fails to affect you because you are not a player killer!\n
+0x4F8	1272		FailsToAffectYou_NotSamePKType	0x0057470C	!\n
+0x4F9	1273		FailsToAffectYouAcrossHouseBoundary	0x005747BC	 fails to affect you across a house boundary!\n
+0x4FA	1274		IsAnInvalidTarget	0x00573B38	 is an invalid target.\n
+0x4FB	1275		YouAreInvalidTargetForSpellOf_	0x00573B7C	You are an invalid target for the spell of %s.\n
+0x4FC	1276	YouArentTrainedInHealing		0x005739E8	You aren't trained in healing!
+0x4FD	1277	YouDontOwnThatHealingKit		0x00573A1A	You don't own that healing kit!
+0x4FE	1278	YouCantHealThat		0x00573A4C	You can't heal that!
+0x4FF	1279		IsAtFullHealth	0x00573A7E	 is already at full health!
+0x500	1280	YouArentReadyToHeal		0x00573AD4	You aren't ready to heal!
+0x501	1281	YouCanOnlyHealPlayers		0x00573B06	You can only use Healing Kits on player characters.
+0x502	1282	LifestoneMagicProtectsYou		0x00573CEE	The Lifestone's magic protects you from the attack!\n
+0x503	1283	PortalEnergyProtectsYou		0x00573C8A	The portal's residual energy protects you from the attack!\n
+0x504	1284	YouAreNonPKAgain		0x005745C1	You are enveloped in a feeling of warmth as you are brought back into the protection of the Light. You are once again a Non-Player Killer.\n
+0x505	1285	YoureTooCloseToYourSanctuary		0x00574C59	You're too close to your sanctuary!
+0x506	1286	CantDoThatTradeInProgress		0x00573984	You can't do that -- you're trading!
+0x507	1287	OnlyNonPKsMayEnterPKLite		0x005745F3	Only Non-Player Killers may enter PK Lite. Please see @help pklite for more details about this command.\n
+0x508	1288	YouAreNowPKLite		0x00574625	A cold wind touches your heart. You are now a Player Killer Lite.\n
+0x509	1289		HasNoSpellTargets	0x00573BAF	 has no appropriate targets equipped for this spell.\n
+0x50A	1290		YouHaveNoTargetsForSpellOf_	0x00573C05	You have no appropriate targets equipped for %s's spell.\n
+0x50B	1291		IsNowOpenFellowship	0x00574874	 is now an open fellowship; anyone may recruit new members.\n
+0x50C	1292		IsNowClosedFellowship	0x005748C8	 is now a closed fellowship.\n
+0x50D	1293		IsNowLeaderOfFellowship	0x0057491C	 is now the leader of this fellowship.\n
+0x50E	1294		YouHavePassedFellowshipLeadershipTo_	0x00574970	You have passed leadership of the fellowship to %s\n
+0x50F	1295	YouDoNotBelongToAFellowship		0x00574984	You do not belong to a Fellowship.
+0x510	1296		MaxNumberOf_Hooked	0x00574D53	You may not hook any more %s on your house.  You already have the maximum number of %s hooked or you are not permitted to hook any on your type of house.\n
+0x512	1298	YouAreNowUsingMaxHooks		0x00574D77	You are now using the maximum number of hooks.  You cannot use another hook until you take an item off one of your hooks.\n
+0x513	1299	YouAreNoLongerUsingMaxHooks		0x00574DA9	You are no longer using the maximum number of hooks.  You may again add items to your hooks.\n
+0x514	1300		MaxNumberOf_HookedUntilOneIsRemoved	0x00574DDB	You now have the maximum number of %s hooked.  You cannot hook any additional %s until you remove one or more from your house.\n
+0x515	1301		NoLongerMaxNumberOf_Hooked	0x00574DFF	You no longer have the maximum number of %s hooked.  You may hook additional %s.\n
+0x516	1302	YouAreNotPermittedToUseThatHook		0x00574E23	You are not permitted to use that hook.\n
+0x517	1303		IsNotCloseEnoughToYourLevel	0x005749B6	 is not close enough to your level.\n
+0x518	1304		LockedFellowshipCannotRecruit_	0x00574BC2	This fellowship is locked; 
+0x519	1305	LockedFellowshipCannotRecruitYou		0x00574C14	The fellowship is locked, you were not added to the fellowship.\n
+0x51A	1306	ActivationNotAllowedNotOwner		0x00573C26	Only the original owner may use that item's magic.
+0x51B	1307		YouHaveEnteredThe_Channel	0x005743C7	You have entered the %s channel.\n
+0x51C	1308		YouHaveLeftThe_Channel	0x005743DB	You have left the %s channel.\n
+0x51E	1310		WillNotReceiveMessage	0x00574A0A	 will not receive your message, please use urgent assistance to speak with an in-game representative\n
+0x51F	1311		MessageBlocked_	0x00574A4E	Message Blocked: %s
+0x520	1312	YouCannotAddPeopleToHearList		0x00574B18	You cannot add anymore people to the list of players that you can hear.\n
+0x521	1313		HasBeenAddedToHearList	0x00574A90	 has been added to the list of people you can hear.\n
+0x522	1314		HasBeenRemovedFromHearList	0x00574AD4	 has been removed from the list of people you can hear.\n
+0x523	1315	YouAreNowDeafTo_Screams		0x00574B4A	You are now deaf to player's screams.\n
+0x524	1316	YouCanHearAllPlayersOnceAgain		0x00574B7C	You can hear all players once again.\n
+0x525	1317		FailToRemove_FromLoudList	0x00574BAE	You fail to remove %s from your loud list.\n
+0x526	1318	YouChickenOut		0x00574C8B	You chicken out.
+0x527	1319	YouCanPossiblySucceed		0x00574CBD	You cannot posssibly succeed.
+0x528	1320	FellowshipIsLocked	YouCannotOpenLockedFellowship	0x00574C46	The fellowship is locked; you cannot open locked fellowships.\n
+0x529	1321	TradeComplete		0x0057504A	Trade Complete!
+0x52A	1322	NotASalvageTool		0x00574CEF	That is not a salvaging tool.
+0x52B	1323	CharacterNotAvailable		0x005738A5	That person is not available now.
+0x52C	1324		YouAreNowSnoopingOn_	0x005738D4	You are now snooping on %s.\n
+0x52D	1325		YouAreNoLongerSnoopingOn_	0x00573907	You are no longer snooping on %s.\n
+0x52E	1326		YouFailToSnoopOn_	0x0057391B	You fail to snoop on %s.\n
+0x52F	1327		AttemptedToSnoopOnYou	0x0057394E	%s attempted to snoop on you.\n
+0x530	1328		IsAlreadyBeingSnoopedOn	0x0057395F	%s is already being snooped on, only one person may snoop on another at a time.\n
+0x531	1329		IsInLimbo	0x00573973	%s is in limbo and cannot receive your message.\n
+0x532	1330	YouMustWaitToPurchaseHouse		0x00574F14	You must wait 30 days after purchasing a house before you may purchase another with any character on the same account. This applies to all housing except apartments.\n
+0x533	1331		YouHaveBeenBootedFromAllegianceChat	0x00573F8B	"You have been booted from your allegiance chat room. Use ""@allegiance chat on"" to rejoin. (%s).\n"
+0x534	1332		HasBeenBootedFromAllegianceChat	0x00573F9F	%s has been booted from the allegiance chat room.\n
+0x535	1333	YouDoNotHaveAuthorityInAllegiance		0x005740B9	You do not have the authority within your allegiance to do that.\n
+0x536	1334		AccountOf_IsAlreadyBannedFromAllegiance	0x005740EB	The account of %s is already banned from the allegiance.\n
+0x537	1335		AccountOf_IsNotBannedFromAllegiance	0x005740FF	The account of %s is not banned from the allegiance.\n
+0x538	1336		AccountOf_WasNotUnbannedFromAllegiance	0x00574113	The account of %s was not unbanned from the allegiance.\n
+0x539	1337		AccountOf_IsBannedFromAllegiance	0x00574127	The account of %s has been banned from the allegiance.\n
+0x53A	1338		AccountOf_IsUnbannedFromAllegiance	0x0057413B	The account of %s is no longer banned from the allegiance.\n
+0x53B	1339		ListOfBannedCharacters	0x0057414F	Banned Characters: 
+0x53E	1342		IsBannedFromAllegiance	0x00573D20	%s is banned from the allegiance!\n
+0x53F	1343		YouAreBannedFromAllegiance	0x00573D34	You are banned from %s's allegiance!\n
+0x540	1344	YouHaveMaxAccountsBanned		0x00573D48	You have the maximum number of accounts banned.!\n
+0x541	1345		IsNowAllegianceOfficer	0x00573DAC	%s is now an allegiance officer.\n
+0x542	1346		ErrorSetting_AsAllegianceOfficer	0x00573DD4	An unspecified error occurred while attempting to set %s as an allegiance officer.\n
+0x543	1347		IsNoLongerAllegianceOfficer	0x00573E42	%s is no longer an allegiance officer.\n
+0x544	1348		ErrorRemoving_AsAllegianceOFficer	0x00573E56	An unspecified error occurred while attempting to remove %s as an allegiance officer.\n
+0x545	1349	YouHaveMaxAllegianceOfficers		0x00573E10	You already have the maximum number of allegiance officers. You must remove some before you add any more.\n
+0x546	1350	YourAllegianceOfficersHaveBeenCleared		0x00573E9C	Your allegiance officers have been cleared.\n
+0x547	1351		YouMustWait_BeforeCommunicating	0x005743EF	You must wait %s before communicating again!\n
+0x548	1352	YouCannotJoinChannelsWhileGagged		0x00574403	You cannot join any chat channels while gagged.\n
+0x549	1353		YourAllegianceOfficerStatusChanged	0x00573DC0	Your allegiance officer status has been modified. You now hold the position of: %s.\n
+0x54A	1354	YouAreNoLongerAllegianceOfficer		0x00573E6A	You are no longer an allegiance officer.\n
+0x54B	1355		IsAlreadyAllegianceOfficerOfThatLevel	0x00573DFC	%s is already an allegiance officer of that level.\n
+0x54C	1356	YourAllegianceDoesNotHaveHometown		0x00573F59	Your allegiance does not have a hometown.\n
+0x54D	1357		The_IsCurrentlyInUse	0x00574EE1	The %s is currently in use.\n
+0x54E	1358	HookItemNotUsable_CannotOpen		0x00574E69	The hook does not contain a usable item. You cannot open the hook because you do not own the house to which it belongs.\n
+0x54F	1359	HookItemNotUsable_CanOpen		0x00574E9B	The hook does not contain a usable item. Use the '@house hooks on'command to make the hook openable.\n
+0x550	1360	MissileOutOfRange		0x00573879	Out of Range!
+0x551	1361		YouAreNotListeningTo_Channel	0x00574435	You are not listening to the %s channel!\n
+0x552	1362	MustPurchaseThroneOfDestinyToUseFunction		0x00575099	You must purchase Asheron's Call -- Throne of Destiny to use this function.
+0x553	1363	MustPurchaseThroneOfDestinyToUseItem		0x005750CB	You must purchase Asheron's Call -- Throne of Destiny to use this item.
+0x554	1364	MustPurchaseThroneOfDestinyToUsePortal		0x005750FD	You must purchase Asheron's Call -- Throne of Destiny to use this portal.
+0x555	1365	MustPurchaseThroneOfDestinyToAccessQuest		0x0057512F	You must purchase Asheron's Call -- Throne of Destiny to access this quest.
+0x556	1366	YouFailedToCompleteAugmentation		0x00574F5A	You have failed to complete the augmentation.\n
+0x557	1367	AugmentationUsedTooManyTimes		0x00574F8C	You have used this augmentation too many times already.\n
+0x558	1368	AugmentationTypeUsedTooManyTimes		0x00574FBE	You have used augmentations of this type too many times already.\n
+0x559	1369	AugmentationNotEnoughExperience		0x00574FF0	You do not have enough unspent experience available to purchase this augmentation.\n
+0x55A	1370		AugmentationSkillNotTrained	0x00575022	%s\n
+0x55B	1371		YouSuccededAcquiringAugmentation	0x00575036	Congratulations! You have succeeded in acquiring the %s augmentation.\n
+0x55C	1372		YouSucceededRecoveringXPFromSkill_AugmentationNotUntrainable	0x00574F46	Although your augmentation will not allow you to untrain your %s skill, you have succeeded in recovering all the experience you had invested in it.\n
+0x55D	1373	ExitTrainingAcademyToUseCommand		0x00573CBC	You must exit the Training Academy before that command will be available to you.\n
+0x55E	1374		AFK	0x00574449	You cannot modify your player killer status while you are recovering from a PK death.\n
+0x55F	1375	OnlyPKsMayUseCommand		0x00574810	Only Player Killer characters may use this command!\n
+0x560	1376	OnlyPKLiteMayUseCommand		0x00574842	Only Player Killer Lite characters may use this command!\n
+0x561	1377	MaxFriendsExceeded		0x0057436D	You may only have a maximum of 50 friends at once. If you wish to add more friends, you must first remove some.
+0x562	1378		IsAlreadyOnYourFriendsList	0x0057439F	%s is already on your friends list!\n
+0x563	1379	ThatCharacterNotOnYourFriendsList		0x005743B3	That character is not on your friends list!\n
+0x564	1380	OnlyHouseOwnerCanUseCommand		0x00574D21	Only the character who owns the house may use this command.
+0x565	1381	InvalidAllegianceNameCantBeEmpty		0x005741C8	That allegiance name is invalid because it is empty. Please use the @allegiance name clear command to clear your allegiance name.\n
+0x566	1382	InvalidAllegianceNameTooLong		0x005741DF	That allegiance name is too long. Please choose another name.\n
+0x567	1383	InvalidAllegianceNameBadCharacters		0x005741F6	That allegiance name contains illegal characters. Please choose another name using only letters, spaces, - and '.\n
+0x568	1384	InvalidAllegianceNameInappropriate		0x0057420D	That allegiance name is not appropriate. Please choose another name.\n
+0x569	1385	InvalidAllegianceNameAlreadyInUse		0x00574224	That allegiance name is already in use. Please choose another name.\n
+0x56A	1386		YouMayOnlyChangeAllegianceNameOnceEvery24Hours	0x0057423B	You may only change your allegiance name once every 24 hours. You may change your allegiance name again in %s.\n
+0x56B	1387	AllegianceNameCleared		0x0057424F	Your allegiance name has been cleared.\n
+0x56C	1388	InvalidAllegianceNameSameName		0x00574266	That is already the name of your allegiance!\n
+0x56D	1389		IsTheMonarchAndCannotBePromotedOrDemoted	0x00573DE8	%s is the monarch and cannot be promoted or demoted.\n
+0x56E	1390		ThatLevelOfAllegianceOfficerIsNowKnownAs_	0x00573ECE	That level of allegiance officer is now known as: %s.\n
+0x56F	1391	InvalidOfficerLevel		0x00573D7A	That is an invalid officer level.\n
+0x570	1392	AllegianceOfficerTitleIsNotAppropriate		0x00573EF9	That allegiance officer title is not appropriate.\n
+0x571	1393	AllegianceNameIsTooLong		0x00573EE2	That allegiance name is too long. Please choose another name.\n
+0x572	1394	AllegianceOfficerTitlesCleared		0x00573F42	All of your allegiance officer titles have been cleared.\n
+0x573	1395	AllegianceTitleHasIllegalChars		0x00573F2B	That allegiance title contains illegal characters. Please choose another name using only letters, spaces, - and '.\n
+0x574	1396		YourAllegianceIsCurrently_	0x0057427D	Your allegiance is currently: %s.\n
+0x575	1397		YourAllegianceIsNow_	0x00574291	Your allegiance is now: %s.\n
+0x576	1398		YouCannotAcceptAllegiance_YourAllegianceIsLocked	0x005742A5	You may not accept the offer of allegiance from %s because your allegiance is locked.\n
+0x577	1399		YouCannotSwearAllegiance_AllegianceOf_IsLocked	0x005742B9	You may not swear allegiance at this time because the allegiance of %s is locked.\n
+0x578	1400		YouHavePreApproved_ToJoinAllegiance	0x005742CD	You have pre-approved %s to join your allegiance.\n
+0x579	1401	YouHaveNotPreApprovedVassals		0x005742E1	You have not pre-approved any vassals to join your allegiance.\n
+0x57A	1402		IsAlreadyMemberOfYourAllegiance	0x00574313	%s is already a member of your allegiance!\n
+0x57B	1403		HasBeenPreApprovedToJoinYourAllegiance	0x00574327	%s has been pre-approved to join your allegiance.\n
+0x57C	1404	YouHaveClearedPreApprovedVassal		0x0057433B	You have cleared the pre-approved vassal for your allegiance.\n
+0x57D	1405	CharIsAlreadyGagged		0x00573FB3	That character is already gagged!\n
+0x57E	1406	CharIsNotCurrentlyGagged		0x00573FE5	That character is not currently gagged!\n
+0x57F	1407		YourAllegianceChatPrivilegesRemoved	0x00574017	Your allegiance chat privileges have been temporarily removed by %s. Until they are restored, you may not view or speak in the allegiance chat channel.
+0x580	1408		IsTemporarilyGaggedInAllegianceChat	0x0057402B	%s is now temporarily unable to view or speak in allegiance chat. The gag will run out in 5 minutes, or %s may be explicitly ungagged before then.
+0x581	1409	YourAllegianceChatPrivilegesRestored		0x0057404F	Your allegiance chat privileges have been restored.\n
+0x582	1410		YourAllegianceChatPrivilegesRestoredBy_	0x00574081	Your allegiance chat privileges have been restored by %s.
+0x583	1411		YouRestoreAllegianceChatPrivilegesTo_	0x00574095	You have restored allegiance chat privileges to %s.
+0x584	1412	TooManyUniqueItems		0x005739B6	You cannot pick up more of that item!
+0x585	1413	HeritageRequiresSpecificArmor		0x00575161	You are restricted to clothes and armor created for your race.
+0x586	1414	ArmorRequiresSpecificHeritage		0x00575193	That item was specifically created for another race.
+0x587	1415	OlthoiCannotInteractWithThat		0x005751C5	Olthoi cannot interact with that!\n
+0x588	1416	OlthoiCannotUseLifestones		0x005751F7	Olthoi cannot use regular lifestones! Asheron would not allow it!\n
+0x589	1417	OlthoiVendorLooksInHorror		0x00575229	The vendor looks at you in horror!\n
+0x58A	1418		CowersFromYou	0x0057525B	%s cowers from you!\n
+0x58B	1419	OlthoiCannotJoinFellowship		0x0057528E	As a mindless engine of destruction an Olthoi cannot join a fellowship!\n
+0x58C	1420	OlthoiCannotJoinAllegiance		0x005752C0	The Olthoi only have an allegiance to the Olthoi Queen!\n
+0x58D	1421	YouCannotUseThatItem		0x005752F2	You cannot use that item!\n
+0x58E	1422	ThisPersonWillNotInteractWithYou		0x00575324	This person will not interact with you!\n
+0x58F	1423	OnlyOlthoiMayUsePortal		0x00575356	Only Olthoi may pass through this portal!\n
+0x590	1424	OlthoiMayNotUsePortal		0x00575388	Olthoi may not pass through this portal!\n
+0x591	1425	YouMayNotUsePortalWithVitae		0x005753BA	You may not pass through this portal while Vitae weakens you!\n
+0x592	1426	YouMustBeTwoWeeksOldToUsePortal		0x005753E9	This character must be two weeks old or have been created on an account at least two weeks old to use this portal!\n
+0x593	1427	OlthoiCanOnlyRecallToLifestone		0x00575418	Olthoi characters can only use Lifestone and PK Arena recalls!\n
