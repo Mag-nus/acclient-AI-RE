@@ -1,0 +1,3 @@
+# Game binaries and debug symbols — user-provided, do not commit
+*.exe
+*.pdb

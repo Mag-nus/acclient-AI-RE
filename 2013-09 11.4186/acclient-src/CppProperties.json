@@ -1,0 +1,26 @@
+{
+  "configurations": [
+    {
+      "name": "Browse",
+      "includePath": [
+        "${workspaceRoot}/include",
+        "${workspaceRoot}/src"
+      ],
+      "defines": [
+        "_WIN32",
+        "WIN32",
+        "__thiscall=__cdecl",
+        "__usercall=__cdecl",
+        "__userpurge=__cdecl"
+      ],
+      "intelliSenseMode": "windows-msvc-x86",
+      "browse": {
+        "path": [
+          "${workspaceRoot}/include",
+          "${workspaceRoot}/src"
+        ],
+        "limitSymbolsToIncludedHeaders": false
+      }
+    }
+  ]
+}
