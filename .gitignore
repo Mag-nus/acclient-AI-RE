@@ -1,3 +1,7 @@
 # Game binaries and debug symbols — user-provided, do not commit
 *.exe
 *.pdb
+
+# Python bytecode from tools/
+__pycache__/
+*.pyc
