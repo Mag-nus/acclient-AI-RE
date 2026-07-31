@@ -168,10 +168,40 @@ Three failure cases (`0x24`, `0x48`, `0x49`) display runtime-initialised
 `.data` string objects rather than literals, and two (`0x4DE`, `0x4DF`) build
 their text from the event payload — so those five have no fixed message.
 
-**Not done.** The 2015 client has no source tree, because without a PDB its
-functions are all `sub_XXXXXX` with no module information to organise by. A
-name-and-module transplant using the existing 11.4186→11.6096 match data is
-feasible and was offered but not started.
+**Done as a table, deliberately not as a source tree (2026-07-28).** 11.6096 has
+no PDB, so its decompilation is entirely `sub_XXXXXX` with no module information.
+The name-and-module transplant now exists as
+`2015-10 11.6096/docs/symbol_transplant_11.6096.tsv` — one row per 11.6096
+function, 36,087 rows:
+
+| | |
+|---|---|
+| named from the 11.4186 PDB | **34,562** (95.8%) |
+| unmapped (no 11.4186 counterpart) | 1,525 |
+| ambiguous, COMDAT-folded | 76 (`alt_names` lists the rival names) |
+
+Confidence is recorded per row, not assumed:
+
+- `exact` (9,520) — the relocation-normalised body occurs exactly once in
+  11.6096 `.text`; unambiguous, and these fix the address map
+- `verified` (23,783) — placed by that map, then the normalised bodies compared
+  equal at the predicted address
+- `predicted` (1,259) — placed by the map onto a real 11.6096 function entry but
+  the bodies do not compare equal: mostly tiny relocation-dense CRT thunks where
+  masking is imprecise, plus the 46 genuinely changed functions
+
+So **33,303 of the 34,562 names are byte-confirmed**, not inferred from position
+alone. Two guards worth keeping if this is ever regenerated: every placement had
+to land on a real function entry in the 11.6096 decompilation (that list comes
+from Hex-Rays, so it is an independent check), and 226 `exact` matches that
+landed somewhere that is *not* a function entry were dropped rather than snapped
+to the nearest one. All 11 known 11.6096 anchors above resolve to the correct
+name and owning `.obj`.
+
+A full 11.6096 source tree was generated from this and then **discarded on
+request** — the table is wanted, the mirrored tree is not. Do not regenerate the
+tree; if it is ever needed, the mapping table plus the 2013
+`split_acclient.py` is all that is required.
 
 **Partially done.** 25 named globals in `acclient_data.h` are typed `_UNKNOWN`;
 about a third were recovered by reading bytes and measuring symbol spacing. The
