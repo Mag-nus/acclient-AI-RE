@@ -540,25 +540,27 @@ today. Worth remembering before adding a caller.
 
 ---
 
-## 0c. Two further leaks, reported against this build
+## 0c. Two externally-reported leaks — one confirmed, one not
 
-Both were reported externally against 11.6096 and verified against both images;
-the full derivation, the vtable census and the patch tables are in the 11.4186
-report **§4b**. Summarised here because the reported addresses are this build's:
+Both were reported against 11.6096 and checked against both images; the full
+derivation is in the 11.4186 report **§4b**. Summarised here because the reported
+addresses are this build's.
 
 **Leak 5 — `RenderSurface` / `RenderTexture` inherit a do-nothing
-`PurgeResource`.** The base implementation at `0x004154A0` is `mov al,1; ret`.
-It occupies vtable slot 2 (`+0x08`), which `GraphicsResource::PurgeOldResources`
-(`0x00446DC0`) dispatches with `call [edx+0x8]`; on a success return the loop
-sets the already-purged flag at `[esi+0x8]`, and its own head skips any resource
-carrying that flag. `RenderSurface` (vtable `0x0079A67C`) and `RenderTexture`
-(vtable `0x0079C198`) inherit the stub, so they are flagged as purged, freed
-never, and skipped for the rest of the session. Six sibling classes do override
-it. Suggested repair: repoint slot 2 at a thunk calling `RenderSurface::Destroy`
-(`0x00444540`) or `RenderTexture::Destroy` (`0x0044C4F0`). Note the interaction
-with §4 of the 11.4186 report: the purge only runs when
-`IsAvailableVideoMemoryLow` is true, so this defect is dormant on a single client
-with a large card and active when several clients share one GPU.
+`PurgeResource`: NOT CONFIRMED.** Every component is real. The base
+implementation at `0x004154A0` is `mov al,1; ret`; it occupies vtable slot 2
+(`+0x08`), which `GraphicsResource::PurgeOldResources` (`0x00446DC0`) dispatches
+with `call [edx+0x8]`; on a success return the loop sets the flag at `[esi+0x8]`
+and its own head then skips that resource forever; and the base vtables
+`0x0079A67C` / `0x0079C198` do carry the stub while six sibling classes override.
+But neither named class reaches that path. `RenderTexture`'s constructor has a
+single caller — `RenderTextureD3D`'s — which overwrites the `GraphicsResource`
+sub-object vtable at `+0x30` with the overriding one, so **no leaf
+`RenderTexture` is ever built**. And `m_bIsThrashable`, which the loop tests
+*before* the dispatch, is zero from the constructor and is never set on a leaf
+`RenderSurface`. **Do not repoint these vtable slots on the strength of this
+report** — see §4b for the full argument and for what the reported +250/hr growth
+might otherwise be.
 
 **Leak 6 — the inventory icon pool is trimmed only while its panel is visible.**
 `UIElement_ItemList::ItemList_Flush` (`0x004E49F0`) clears each

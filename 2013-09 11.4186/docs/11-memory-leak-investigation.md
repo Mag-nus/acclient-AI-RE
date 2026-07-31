@@ -15,17 +15,18 @@ than stated.**
 
 | Claim | Finding |
 |---|---|
-| "The client leaks memory over time" | **Confirmed** — six independent leaks, plus a structural amplifier |
+| "The client leaks memory over time" | **Confirmed** — five independent leaks, plus a structural amplifier. A sixth was reported externally and could **not** be confirmed (§4b, leak 5) |
 | "Icon files are not being freed" | **Not supported as stated.** All 17 icon-DID acquisitions are correctly refcounted and released. But icon *pixel* memory does leak, through a different object (`IconData`) on a different trigger — and **item-appearance memory leaks badly through `Palette`, see §0b** |
 | "Looting makes it worse" | **Confirmed.** Two separate mechanisms: server messages about objects the client has not yet materialized (§2), and a leaked 8 KB palette for every item appearance loaded (§0b) |
 
-Six defects are known. Ranked by size, the palette leak in **§0b dominates the
-three below combined** — read it first. Two further leaks, reported externally
-and verified here against both builds, are in **§4b**: `RenderSurface` and
-`RenderTexture` inherit a `PurgeResource` stub that frees nothing yet reports
-success (so the eviction loop flags them and skips them forever), and the
-inventory icon pool is trimmed only while its panel is visible. The original
-three, ranked by how well each matches the reported symptom:
+Five defects are known. Ranked by size, the palette leak in **§0b dominates the
+three below combined** — read it first. **§4b** covers two externally-reported
+leaks: the inventory icon pool, which is trimmed only while its panel is visible
+and is **confirmed** in both builds; and a claim that `RenderSurface` and
+`RenderTexture` inherit a do-nothing `PurgeResource` and are therefore flagged
+and skipped forever, which is **not confirmed** — every component of that
+mechanism is real, but neither class reaches it. The original three, ranked by
+how well each matches the reported symptom:
 
 1. **`null_weenie_object_table` is never reaped** (§2) — a genuine asymmetry bug.
    Unbounded, monotonic, **correlates with looting**. This is the best match for
@@ -421,55 +422,58 @@ what §3 prevents.
 
 ---
 
-## 4b. Two further leaks — reported externally, verified here
+## 4b. Two externally-reported leaks — one confirmed, one not
 
-Both were reported by a third party against 11.6096. Both are confirmed present
-in **both builds** and are independent of the four above.
+Both were reported by a third party against 11.6096 and checked here against both
+builds. **Leak 6 is confirmed** and is present in 11.4186 and 11.6096 alike.
+**Leak 5 is not**: its individual components are all real, but the class it names
+never reaches the code path it blames, and the section records why. Read leak 5
+as a worked negative, not as a defect to patch.
 
-### Leak 5 — `RenderSurface` and `RenderTexture` inherit a do-nothing `PurgeResource`
+### Leak 5 — the `PurgeResource` stub is real, but neither named class reaches it
 
-`GraphicsResource::PurgeResource` (11.4186 `0x00415200`, 11.6096 `0x004154A0`)
-is a stub that reports success and frees nothing:
+**Reported as:** `RenderSurface` and `RenderTexture` inherit a do-nothing
+`PurgeResource`, are flagged as purged by the eviction loop, and are then skipped
+forever while their buffers pile up.
+
+**Verified:** the stub, the vtable census and the flag-and-skip loop are all
+exactly as described. **Not verified:** that either named class ever traverses
+that path. On the evidence below the reported mechanism does not fire, so this is
+recorded as *not confirmed* rather than as a further defect.
+
+What is real. `GraphicsResource::PurgeResource` (11.4186 `0x00415200`, 11.6096
+`0x004154A0`) is `mov al,1 / ret` — reports success, frees nothing. It occupies
+**vtable slot 2 (`+0x08`)**, established from the dispatcher rather than a name,
+because the body is COMDAT-folded and has no unique identity: 11.4186's PDB puts
+**39 proc records at `0x00415200`**, and 11.6096 references the same body from
+299 `.rdata` slots. `GraphicsResource::PurgeOldResources` (11.4186 `0x00446C60`,
+11.6096 `0x00446DC0`) walks `s_Resources` and does:
 
 ```
-00415200: b0 01     mov al,0x1
-00415202: c3        ret
-```
-
-It sits in **vtable slot 2 (`+0x08`)**. That was established from the dispatcher,
-not from a name, because the body is COMDAT-folded and has no unique identity in
-either build: 11.4186's PDB puts **39 distinct proc records at `0x00415200`**
-(`DBObj::InitLoad`, `CIme::Activate`, `BoolPropertyValue::HasValidData`, … —
-every `return true` in the image), one of which is
-`GraphicsResource::PurgeResource`; in 11.6096 the same body is referenced from
-299 `.rdata` slots. Any tool that labels this address will pick one of those
-names arbitrarily, so the slot must be read from the dispatcher —
-`GraphicsResource::PurgeOldResources` (11.4186 `0x00446C60`, 11.6096
-`0x00446DC0`):
-
-```
-446dec  mov al,BYTE PTR [esi+0x8]    ; already-purged flag
-446def  test al,al
-446df1  jne  <skip>                  ; flagged -> never revisited again
+446dec  mov al,BYTE PTR [esi+0x8]    ; m_bIsLost      -> already flagged?
+446df1  jne  <skip>                  ;                   yes: never revisited
 446df3  mov al,BYTE PTR [esi+0x1c]   ; m_bIsThrashable
-446df8  je   <skip>
- ...
+446df8  je   <skip>                  ;                   not thrashable: skip
+ ...                                 ; frame-stamp and m_nResourceSize guards
 446e28  call DWORD PTR [edx+0x8]     ; PurgeResource
-446e2b  test al,al
 446e2d  je   <skip>
-446e2f  mov BYTE PTR [esi+0x8],0x1   ; reported success -> set the flag
+446e2f  mov BYTE PTR [esi+0x8],0x1   ; success -> flag, never revisited
 ```
 
-So a class that inherits the stub is flagged as purged on its first eligible
-pass, frees nothing, and is skipped for the remainder of the session.
+Offsets confirmed against `acclient.h:31760`: `m_bIsLost` `+0x08` (`align(8)`
+after the vfptr), `m_TimeUsed` `+0x10`, `m_FrameUsed` `+0x18`, `m_bIsThrashable`
+`+0x1c`, `m_nResourceSize` `+0x20`. Every `GraphicsResource` self-registers — the
+constructor ends in `GraphicsResource::LinkResource` (`0x00446F90`) — so
+everything genuinely is walked by that loop.
 
-Of the nine `GraphicsResource`-derived vtables, **six override `PurgeResource`
-and two subclasses do not** (the ninth is the base class itself):
+The family, enumerated independently per build by scanning `.rdata` for vtables
+whose slot 1 holds `GraphicsResource::CopyInto` (11.4186 `0x00446A30`, 11.6096
+`0x00446B90`), a base method nobody overrides:
 
 | vtable 11.4186 | vtable 11.6096 | class | slot 2 |
 |---|---|---|---|
-| `0x0079967C` | `0x0079A67C` | `RenderSurface` | **inherits stub** |
-| `0x0079B198` | `0x0079C198` | `RenderTexture` | **inherits stub** |
+| `0x0079967C` | `0x0079A67C` | `RenderSurface` | inherits stub |
+| `0x0079B198` | `0x0079C198` | `RenderTexture` | inherits stub |
 | `0x0079AF64` | `0x0079BF64` | `GraphicsResource` (base) | stub |
 | `0x007C9714` | `0x007CA4DC` | `CSurface` | override |
 | `0x007C9D44` | `0x007CAB04` | `ImgTex` | override |
@@ -478,36 +482,51 @@ and two subclasses do not** (the ninth is the base class itself):
 | `0x00800904` | `0x00801A94` | `RenderSurfaceD3D` | override |
 | `0x008009D4` | `0x00801B64` | `RenderIndexStreamD3D` | override |
 
-The family was enumerated in each build independently, by scanning `.rdata` for
-vtables whose slot 1 holds `GraphicsResource::CopyInto` (11.4186 `0x00446A30`,
-11.6096 `0x00446B90`) — a base method none of the subclasses override, so it
-identifies the family without relying on the folded slot-2 body. Both builds give
-the same nine, the same six overrides, and the same two affected subclasses.
-`RenderSurface` and `RenderTexture` are genuinely instantiated: their vtables are
-stored from `.text` (11.6096 `0x00444114`/`0x00444594` and
-`0x0044C45C`/`0x0044C6D0`/`0x00696A3C`).
+Corroborated by the PDB, which defines exactly seven `::PurgeResource` symbols —
+the base plus those six.
 
-Independently corroborated by the PDB: 11.4186 defines exactly seven
-`::PurgeResource` symbols — the base plus those six. There is no
-`RenderSurface::PurgeResource` and no `RenderTexture::PurgeResource`.
+**Why it nevertheless does not fire.** Both named classes are *base* classes of
+D3D types in the same table, and `GraphicsResource` is a second base, so the
+vtable that matters sits at `+0x30`, not at `+0`:
 
-**Proposed fix**, from the report and *not* runtime-tested here: repoint slot 2
-of both vtables at a thunk that calls the class's own `Destroy` and returns 1 —
-`RenderSurface::Destroy` (11.4186 `0x004443E0`, 11.6096 `0x00444540`) and
-`RenderTexture::Destroy` (11.4186 `0x0044C330`, 11.6096 `0x0044C4F0`). Reported
-effect: roughly halves the growth rate on a fresh client.
+- `RenderTexture::RenderTexture` (`0x0044C270`) stores the base pair
+  (`[esi] = 0x0079B1A8`, `[esi+0x30] = 0x0079B198`) and has **exactly one
+  caller**, `RenderTextureD3D::RenderTextureD3D` (`0x00695A70`), which
+  immediately overwrites both (`[esi] = 0x00800898`, `[esi+0x30] = 0x00800888`) —
+  the overriding vtable. **No leaf `RenderTexture` is ever constructed.** That
+  half of the report is wrong.
+- `RenderSurface::RenderSurface` (`0x00443F90`) has two callers.
+  `RenderSurfaceD3D::RenderSurfaceD3D` (`0x00695EC0`) likewise overwrites
+  `[esi+0x30]` with `0x00800904` (override). The other,
+  `RenderDevice::CreateLocalSurface` (`0x0054F130`), is `operator new(0x120)`
+  plus the base constructor only and does leave the stub in place — but it has
+  **no direct callers** and is reachable only through a virtual slot that this
+  analysis could not show being dispatched.
+- Decisively, `m_bIsThrashable` is `0` from the constructor and the loop tests it
+  **before** reaching `call [edx+0x8]`. It is written in only three places: the
+  constructor (0), `SetResourceIsThrashable`, and `GraphicsResource::CopyInto`
+  (whose sole caller is `RenderTexture::CopyInto`). `SetResourceIsThrashable` has
+  five call sites, all on `RenderTexture` or the D3D stream classes —
+  `RenderTexture::ConstructTexture`, `ImgTex::GetD3DTexture` (sets 1),
+  `ImgTex::CreateD3DTexture` (sets 0), `RenderVertexStreamD3D::Create`,
+  `RenderIndexStreamD3D::Init`. **Nothing marks a leaf `RenderSurface`
+  thrashable**, so the loop rejects it before the stub is reached and the flag at
+  `+0x8` is never set.
 
-> **Interaction with §4 — this is why it matters most when multi-boxing.** §4
-> shows the whole purge is gated on `IsAvailableVideoMemoryLow`, which returns
-> false whenever a quarter of VRAM is still free. On a single client with a large
-> card the purge never runs at all, so the flag is never set — those resources
-> still accumulate, but the stub is not the reason. With many clients sharing one
-> GPU, VRAM pressure makes the purge fire, the flag gets set, and the two
-> affected classes are then excluded permanently. The defect therefore bites
-> hardest in exactly the configuration this repository cares about.
+So the reported chain — reach the stub, get flagged, be skipped forever — is not
+reachable for either class as far as this analysis can establish.
 
-**Open.** Instances flagged before any fix keep `[+0x8] = 1` and are skipped
-forever, so a vtable fix stops new growth without draining what already leaked.
+**What is left standing.** Anything not marked thrashable is never purged at all,
+so a `RenderSurface`'s buffers are reclaimed only when its refcount reaches zero.
+That is a restatement of §4, not a distinct defect, and it does not depend on the
+stub.
+
+**Honest limit.** The report cites roughly +250 instances/hour and says
+repointing slot 2 at `Destroy` halved that. The growth is a real measurement and
+this analysis does not explain it: if the stub is never invoked, a fix to the
+stub should be inert. Either those instances are D3D subclasses counted under the
+base class name, or there is a path here that has not been found. Worth resolving
+before anyone patches vtables on this basis.
 
 ### Leak 6 — the inventory icon pool is trimmed only while its panel is visible
 
