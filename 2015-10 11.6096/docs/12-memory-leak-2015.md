@@ -540,6 +540,46 @@ today. Worth remembering before adding a caller.
 
 ---
 
+## 0c. Two further leaks, reported against this build
+
+Both were reported externally against 11.6096 and verified against both images;
+the full derivation, the vtable census and the patch tables are in the 11.4186
+report **§4b**. Summarised here because the reported addresses are this build's:
+
+**Leak 5 — `RenderSurface` / `RenderTexture` inherit a do-nothing
+`PurgeResource`.** The base implementation at `0x004154A0` is `mov al,1; ret`.
+It occupies vtable slot 2 (`+0x08`), which `GraphicsResource::PurgeOldResources`
+(`0x00446DC0`) dispatches with `call [edx+0x8]`; on a success return the loop
+sets the already-purged flag at `[esi+0x8]`, and its own head skips any resource
+carrying that flag. `RenderSurface` (vtable `0x0079A67C`) and `RenderTexture`
+(vtable `0x0079C198`) inherit the stub, so they are flagged as purged, freed
+never, and skipped for the rest of the session. Six sibling classes do override
+it. Suggested repair: repoint slot 2 at a thunk calling `RenderSurface::Destroy`
+(`0x00444540`) or `RenderTexture::Destroy` (`0x0044C4F0`). Note the interaction
+with §4 of the 11.4186 report: the purge only runs when
+`IsAvailableVideoMemoryLow` is true, so this defect is dormant on a single client
+with a large card and active when several clients share one GPU.
+
+**Leak 6 — the inventory icon pool is trimmed only while its panel is visible.**
+`UIElement_ItemList::ItemList_Flush` (`0x004E49F0`) clears each
+`UIElement_UIItem` (1,736 bytes, vtable `0x007C0498`) and sets it to the WAITING
+state `0x1000001C`, but never calls `InternalDeleteItem` (`0x004E41C0`) — by
+design, the array is a recycle pool. The only trim,
+`UIElement_ItemList::UpdateEmptySlots` (`0x004E4390`), returns immediately unless
+`UIElement::IsVisible` (`0x004603A0`) is true, so a closed panel never drains and
+each container opened grows the pool. Two-site patch: six `90`s at `0x004E439D`
+and six at `0x004E43C0`.
+
+The original report adds a third site, `75 0D` → `75 08`, described as making the
+trim loop skip past non-WAITING items. That branch is at `0x004E4496` (not
+`0x004E4497`), and the change does not do what is claimed: both delete loops
+re-fetch `[esi+0x610]-1` — always the *last* item — so they trim trailing slack
+and correctly stop at the first non-WAITING entry. Patched, the loop re-tests the
+same item and spins until its counter expires, deleting nothing extra. See the
+11.4186 report §4b for the disassembly.
+
+---
+
 ## 1. The three defects, restated
 
 Short form only — see the 11.4186 report §2–§4 for the derivation.

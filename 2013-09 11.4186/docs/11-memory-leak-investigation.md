@@ -15,13 +15,17 @@ than stated.**
 
 | Claim | Finding |
 |---|---|
-| "The client leaks memory over time" | **Confirmed** — four independent leaks, plus a structural amplifier |
+| "The client leaks memory over time" | **Confirmed** — six independent leaks, plus a structural amplifier |
 | "Icon files are not being freed" | **Not supported as stated.** All 17 icon-DID acquisitions are correctly refcounted and released. But icon *pixel* memory does leak, through a different object (`IconData`) on a different trigger — and **item-appearance memory leaks badly through `Palette`, see §0b** |
 | "Looting makes it worse" | **Confirmed.** Two separate mechanisms: server messages about objects the client has not yet materialized (§2), and a leaked 8 KB palette for every item appearance loaded (§0b) |
 
-Four defects are known. Ranked by size, the palette leak in **§0b dominates the
-three below combined** — read it first. The original three, ranked by how well
-each matches the reported symptom:
+Six defects are known. Ranked by size, the palette leak in **§0b dominates the
+three below combined** — read it first. Two further leaks, reported externally
+and verified here against both builds, are in **§4b**: `RenderSurface` and
+`RenderTexture` inherit a `PurgeResource` stub that frees nothing yet reports
+success (so the eviction loop flags them and skips them forever), and the
+inventory icon pool is trimmed only while its panel is visible. The original
+three, ranked by how well each matches the reported symptom:
 
 1. **`null_weenie_object_table` is never reaped** (§2) — a genuine asymmetry bug.
    Unbounded, monotonic, **correlates with looting**. This is the best match for
@@ -414,6 +418,173 @@ executes.
 System-RAM texture footprint is released only by destroying the owning `ImgTex` /
 `UISurface` / `CSurface` — i.e. only by refcount reaching zero. Which is exactly
 what §3 prevents.
+
+---
+
+## 4b. Two further leaks — reported externally, verified here
+
+Both were reported by a third party against 11.6096. Both are confirmed present
+in **both builds** and are independent of the four above.
+
+### Leak 5 — `RenderSurface` and `RenderTexture` inherit a do-nothing `PurgeResource`
+
+`GraphicsResource::PurgeResource` (11.4186 `0x00415200`, 11.6096 `0x004154A0`)
+is a stub that reports success and frees nothing:
+
+```
+00415200: b0 01     mov al,0x1
+00415202: c3        ret
+```
+
+It sits in **vtable slot 2 (`+0x08`)**. That was established from the dispatcher,
+not from a name, because the body is COMDAT-folded and has no unique identity in
+either build: 11.4186's PDB puts **39 distinct proc records at `0x00415200`**
+(`DBObj::InitLoad`, `CIme::Activate`, `BoolPropertyValue::HasValidData`, … —
+every `return true` in the image), one of which is
+`GraphicsResource::PurgeResource`; in 11.6096 the same body is referenced from
+299 `.rdata` slots. Any tool that labels this address will pick one of those
+names arbitrarily, so the slot must be read from the dispatcher —
+`GraphicsResource::PurgeOldResources` (11.4186 `0x00446C60`, 11.6096
+`0x00446DC0`):
+
+```
+446dec  mov al,BYTE PTR [esi+0x8]    ; already-purged flag
+446def  test al,al
+446df1  jne  <skip>                  ; flagged -> never revisited again
+446df3  mov al,BYTE PTR [esi+0x1c]   ; m_bIsThrashable
+446df8  je   <skip>
+ ...
+446e28  call DWORD PTR [edx+0x8]     ; PurgeResource
+446e2b  test al,al
+446e2d  je   <skip>
+446e2f  mov BYTE PTR [esi+0x8],0x1   ; reported success -> set the flag
+```
+
+So a class that inherits the stub is flagged as purged on its first eligible
+pass, frees nothing, and is skipped for the remainder of the session.
+
+Of the nine `GraphicsResource`-derived vtables, **six override `PurgeResource`
+and two subclasses do not** (the ninth is the base class itself):
+
+| vtable 11.4186 | vtable 11.6096 | class | slot 2 |
+|---|---|---|---|
+| `0x0079967C` | `0x0079A67C` | `RenderSurface` | **inherits stub** |
+| `0x0079B198` | `0x0079C198` | `RenderTexture` | **inherits stub** |
+| `0x0079AF64` | `0x0079BF64` | `GraphicsResource` (base) | stub |
+| `0x007C9714` | `0x007CA4DC` | `CSurface` | override |
+| `0x007C9D44` | `0x007CAB04` | `ImgTex` | override |
+| `0x007E5438` | `0x007E6520` | `RenderVertexStreamD3D` | override |
+| `0x00800888` | `0x00801A18` | `RenderTextureD3D` | override |
+| `0x00800904` | `0x00801A94` | `RenderSurfaceD3D` | override |
+| `0x008009D4` | `0x00801B64` | `RenderIndexStreamD3D` | override |
+
+The family was enumerated in each build independently, by scanning `.rdata` for
+vtables whose slot 1 holds `GraphicsResource::CopyInto` (11.4186 `0x00446A30`,
+11.6096 `0x00446B90`) — a base method none of the subclasses override, so it
+identifies the family without relying on the folded slot-2 body. Both builds give
+the same nine, the same six overrides, and the same two affected subclasses.
+`RenderSurface` and `RenderTexture` are genuinely instantiated: their vtables are
+stored from `.text` (11.6096 `0x00444114`/`0x00444594` and
+`0x0044C45C`/`0x0044C6D0`/`0x00696A3C`).
+
+Independently corroborated by the PDB: 11.4186 defines exactly seven
+`::PurgeResource` symbols — the base plus those six. There is no
+`RenderSurface::PurgeResource` and no `RenderTexture::PurgeResource`.
+
+**Proposed fix**, from the report and *not* runtime-tested here: repoint slot 2
+of both vtables at a thunk that calls the class's own `Destroy` and returns 1 —
+`RenderSurface::Destroy` (11.4186 `0x004443E0`, 11.6096 `0x00444540`) and
+`RenderTexture::Destroy` (11.4186 `0x0044C330`, 11.6096 `0x0044C4F0`). Reported
+effect: roughly halves the growth rate on a fresh client.
+
+> **Interaction with §4 — this is why it matters most when multi-boxing.** §4
+> shows the whole purge is gated on `IsAvailableVideoMemoryLow`, which returns
+> false whenever a quarter of VRAM is still free. On a single client with a large
+> card the purge never runs at all, so the flag is never set — those resources
+> still accumulate, but the stub is not the reason. With many clients sharing one
+> GPU, VRAM pressure makes the purge fire, the flag gets set, and the two
+> affected classes are then excluded permanently. The defect therefore bites
+> hardest in exactly the configuration this repository cares about.
+
+**Open.** Instances flagged before any fix keep `[+0x8] = 1` and are skipped
+forever, so a vtable fix stops new growth without draining what already leaked.
+
+### Leak 6 — the inventory icon pool is trimmed only while its panel is visible
+
+`UIElement_UIItem` is **1,736 bytes** (`operator new(0x6C8)`, allocated in
+`UIElement_UIItem::Create` at 11.6096 `0x004E1D8D`); its vtable is `0x007C0498`.
+
+`UIElement_ItemList::ItemList_Flush` (11.4186 `0x004E3D60`, 11.6096
+`0x004E49F0`) recycles rather than frees:
+
+```
+4e49fe  call 0x4e1e00      ; UIElement_UIItem::Clear_UIItem
+4e4a09  push 0x1000001c
+4e4a0e  call 0x4e2190      ; UIElement_UIItem::UIItem_SetState  -> WAITING
+```
+
+It never calls `InternalDeleteItem` (11.4186 `0x004E3530`, 11.6096
+`0x004E41C0`) — verified by enumerating its call targets in both builds. That is
+deliberate: the array is a recycle pool.
+
+The only trim path, `UIElement_ItemList::UpdateEmptySlots` (11.4186
+`0x004E3700`, 11.6096 `0x004E4390`), opens with a visibility gate:
+
+```
+4e4396  call 0x4603a0                 ; UIElement::IsVisible
+4e439b  test al,al
+4e439d  0f 84 f3 01 00 00   je ...    ; not visible -> return immediately
+```
+
+Close the panel and the list is invisible, so the pool is never trimmed; every
+container opened adds to it. `0x1000001C` is the WAITING state — the same
+constant `Flush` sets and `UpdateEmptySlots` later compares
+(`cmp eax,0x1000001C`, 11.6096 `0x004E4491`), which ties the two halves together.
+
+**Proposed patch** (11.6096; byte values verified against the image here):
+
+| VA | current | change to | effect |
+|---|---|---|---|
+| `0x004E439D` | `0F 84 F3 01 00 00` | six `90` | drop the `IsVisible` gate |
+| `0x004E43C0` | `0F 85 CD 01 00 00` | six `90` | drop the `GetAttribute_Int(0x10000015) != -1` gate |
+
+> **The third site in the original report does not do what it is described as
+> doing, and is not reproduced above.** That report also changes `75 0D` → `75 08`
+> to make "the trim loop skip past non-WAITING items instead of bailing at the
+> first one". Two corrections. First, the branch begins at **`0x004E4496`**, not
+> `0x004E4497`. Second, and substantively: the loop cannot skip to another item,
+> because it does not iterate over the array. Both of `UpdateEmptySlots`'
+> delete loops (`0x004E4462`–`0x004E44A3` and `0x004E4550`–`0x004E4591`) are
+> identical in shape and re-fetch **the last element every pass**:
+>
+> ```
+> 4e4462  mov  eax,[esi+0x610]     ; live item count
+> 4e4468  dec  eax                 ; ... minus one -> always the LAST index
+> 4e4469  push eax
+> 4e446c  call 0x46dc50            ; UIElement_ListBox::GetItem
+>  ...
+> 4e448c  call 0x4e1e20            ; UIItem_GetState
+> 4e4491  cmp  eax,0x1000001c      ; WAITING?
+> 4e4496  75 0d  jne 0x4e44a5      ; no -> stop trimming
+> 4e449b  call 0x4e41c0            ; yes -> InternalDeleteItem
+> 4e44a0  inc  ebx
+> 4e44a3  jl   0x4e4462            ; repeat: count has shrunk, so a new last item
+> ```
+>
+> This is a trailing-slack trim: delete the last item while it is WAITING, stop at
+> the first that is not. Exiting there is correct. Patching the branch to `75 08`
+> lands on `inc ebx` and loops back to `0x004E4462`, which re-reads the *same*
+> `[esi+0x610]-1` — nothing was deleted, so the count did not move — re-tests the
+> same non-WAITING item, and spins until `ebx` reaches `ebp`. It deletes nothing
+> extra. It is inert apart from the wasted iterations, so the growth the report
+> observes stopping is attributable to the two gate removals above.
+
+The reported heap observation — roughly 80% of leaked instances holding item-GUID
+zero at `+0x5FC` — is a runtime measurement and cannot be checked from the image.
+It is recorded as reported, not verified.
+
+Both defects are present in 11.4186 and 11.6096 alike, consistent with §13's
+finding that the two builds are over 99.5% identical.
 
 ---
 
